@@ -8,3 +8,43 @@ datasource db {
   provider = "postgresql"
   url = env("DATABASE_URL")
 }
+
+model User {
+  id  String     @id @default(uuid())
+  email String  @unique
+  password  String
+  createdAt DateTime @default(now())
+  folders Folder[]
+  files  File[]
+  sessions Session[]
+}
+
+model Folder {
+  id        String   @id @default(uuid())
+  name      String
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  files     File[]
+  createdAt DateTime @default(now())
+}
+
+model File {
+  id         String   @id @default(uuid())
+  name       String
+  url        String
+  size       Int
+  folderId   String? 
+  folder     Folder?  @relation(fields: [folderId], references: [id], onDelete: Cascade)
+  userId     String   
+  user       User     @relation(fields: [userId], references: [id])
+  uploadedAt DateTime @default(now())
+}
+
+model Session {
+  id        String   @id
+  sid       String   @unique
+  data      String
+  expiresAt DateTime
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+}

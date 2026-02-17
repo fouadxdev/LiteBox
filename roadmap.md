@@ -1,11 +1,12 @@
 
 NAME - Lite BOX
 
+
 Phase 1: Foundation (Days 1-2)
 Goal: Get frontend and backend talking to each other
 
 Setup Projects
-
+    
 Create Vite React TypeScript project for frontend
 Create Node TypeScript project for backend
 Install dependencies

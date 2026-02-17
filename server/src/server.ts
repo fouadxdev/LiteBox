@@ -1,4 +1,5 @@
 import express from "express";
+import { prisma } from "./config/database.js";
 import cors from "cors";
 import 'dotenv/config'
 
@@ -18,6 +19,16 @@ app.use(express.json());
 app.get("/api/health", (req, res) => {
   res.send({ status: "ok", message: "server is running!" });
 });
+
+//db-test 
+app.get('/api/test-db' , async (req, res) => {
+  try {
+    const userCount = await prisma.user.count()
+    res.json({sucess: true, message: 'Lite box is connected to db', userInDb: userCount})
+  } catch (e) {
+    res.status(500).json({error: 'Database Connection failed!'})
+  }
+})
 
 app.listen(PORT, () => {
     console.log(`Server is running at http://localhost:${PORT}`)
