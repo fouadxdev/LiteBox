@@ -1,0 +1,17 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+
+# Environment secrets (CRITICAL: Never commit these!)
+.env
+.env.*
+
+# Local Databases (if you ever use SQLite for testing)
+*.db
+*.db-journal
+
+# Prisma Generated Client
+# Since you have a custom output path, this ensures it's ignored
+/generated/
