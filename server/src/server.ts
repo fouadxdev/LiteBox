@@ -15,6 +15,10 @@ app.use(
 );
 app.use(express.json());
 
+app.get('/', (req, res) => {
+  res.send('This is the Homepage')
+})
+
 // test
 app.get("/api/health", (req, res) => {
   res.send({ status: "ok", message: "server is running!" });
