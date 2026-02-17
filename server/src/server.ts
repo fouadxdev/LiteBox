@@ -1,12 +1,17 @@
 import express from "express";
-import { prisma } from "./config/database.js";
 import cors from "cors";
+import authRoutes from './routes/auth.routes.js'
+import { prisma } from "./config/database.js";
+import { PrismaSessionStore } from "@quixo3/prisma-session-store";
 import 'dotenv/config'
+import session from "express-session";
+import passport from "passport";
+import './config/passport.js'
 
 const app = express();
 const PORT = Number(process.env.PORT) || 3000;
 
-//middleware
+
 app.use(
   cors({
     origin: "http://localhost:5173",
@@ -14,6 +19,36 @@ app.use(
   }),
 );
 app.use(express.json());
+
+
+
+app.use(
+  session({
+    secret: String(process.env.SESSION_SECRET),
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      maxAge: 1000 * 60 * 60 * 24, 
+      httpOnly: true,
+      secure: false // set to true in prod
+    },
+    store: new PrismaSessionStore(
+      prisma, 
+      {
+        checkPeriod: 2 * 60 * 1000,  //ms
+        dbRecordIdIsSessionId: true,
+      }
+    )
+  })
+)
+
+app.use(passport.initialize());
+app.use(passport.session());
+
+// Auth routes
+app.use('/api/auth', authRoutes);
+
+
 
 app.get('/', (req, res) => {
   res.send('This is the Homepage')
