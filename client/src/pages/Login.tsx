@@ -1,7 +1,10 @@
-
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { loginUser } from "@/lib/api";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
+import { useAuth } from '@/context/AuthContext';
 import {
   Card,
   CardContent,
@@ -28,6 +31,10 @@ const formSchema = z.object({
 type LoginFormData = z.infer<typeof formSchema>;
 
 export default function Login() {
+  const navigate = useNavigate();
+  const [error, setError] = useState<string>("");
+  const [isLoading, setIsLoading] = useState(false);
+
   const form = useForm<LoginFormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -37,8 +44,19 @@ export default function Login() {
   });
 
   const onSubmit = async (data: LoginFormData) => {
-    console.log("Form submitted:", data);
-    // We'll add the actual API call in a moment
+    try {
+      setError('')
+      setIsLoading(true)
+
+      await loginUser(data)
+      loginUser(response.user)
+      navigate('/')
+
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Login Failed");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -46,7 +64,7 @@ export default function Login() {
       <div className="min-h-screen bg-gray-100 p-4 flex items-center ">
         <Card className="w-full max-w-md mx-auto">
           <CardHeader>
-            <CardTitle className="mx-auto">Login to LiteBox</CardTitle>
+            <CardTitle className="mx-auto text-2xl">Login to LiteBox</CardTitle>
             <CardDescription className="mx-auto">
               Enter your credentials to access your account
             </CardDescription>
@@ -85,11 +103,16 @@ export default function Login() {
                   )}
                 />
 
-                <Button type="submit" className="w-full">
-                  Login
+                <Button type="submit" className="w-full" disabled={isLoading}>
+                  {isLoading ? 'Logging in...' : 'Login'}
                 </Button>
               </form>
             </Form>
+            {error && (
+            <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded text-red-700 text-sm">
+              {error}
+            </div>
+          )}
           </CardContent>
         </Card>
       </div>
