@@ -4,7 +4,7 @@ import { loginUser } from "@/lib/api";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { useAuth } from '@/context/AuthContext';
+import { useAuth } from "@/hooks/useAuth";
 import {
   Card,
   CardContent,
@@ -35,6 +35,10 @@ export default function Login() {
   const [error, setError] = useState<string>("");
   const [isLoading, setIsLoading] = useState(false);
 
+  const { login } = useAuth();
+
+
+
   const form = useForm<LoginFormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -48,8 +52,8 @@ export default function Login() {
       setError('')
       setIsLoading(true)
 
-      await loginUser(data)
-      loginUser(response.user)
+      const response  = await loginUser(data)
+      login(response.user)
       navigate('/')
 
     } catch (err) {

@@ -49,7 +49,7 @@ app.use(passport.session());
 app.use('/api/auth', authRoutes);
 
 
-
+//test
 app.get('/', (req, res) => {
   res.send('This is the Homepage')
 })

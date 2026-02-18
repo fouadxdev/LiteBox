@@ -73,14 +73,15 @@ export const logout = (req: Request, res: Response) => {
     if (err) {
       return res.status(500).json({ error: "Logout failed" });
     }
-  });
 
-  req.session.destroy((err) => {
-    if (err) {
-      return res.status(500).json({ error: "Session destruction failed" });
-    }
+    // ONLY destroy session AFTER logout completes
+    req.session.destroy((err) => {
+      if (err) {
+        return res.status(500).json({ error: "Session destruction failed" });
+      }
 
-    res.json({ message: "Logged Out Successfuly" });
+      res.json({ message: "Logged out successfully" });
+    });
   });
 };
 

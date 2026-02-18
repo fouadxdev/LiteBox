@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { Link } from "react-router-dom";
-import { useAuth } from '@/context/AuthContext';
+import { useAuth } from '../hooks/useAuth';
 import {
   Card,
   CardContent,
@@ -44,13 +44,15 @@ export default function Signup() {
     },
   });
 
+  const { login } = useAuth();
+
   const onSubmit = async (data: LoginFormData) => {
     try {
       setError("");
       setIsLoading(true);
 
-      await signupUser(data)
-      signupUser(response.user)
+      const response = await signupUser(data)
+      login(response.user)
 
       navigate("/");
     } catch (err) {

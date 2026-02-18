@@ -9,9 +9,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const checkAuth = async () => {
     try {
-      const data = await checkAuthAPI();
-      setUser(data.user); 
-    } catch (error: any) {
+      const userData = await checkAuthAPI();
+      setUser(userData); 
+    } catch (error) {
       setUser(null);
     } finally {
       setIsLoading(false);
@@ -31,7 +31,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     try {
       await logoutUser();
       setUser(null);
-    } catch (error: any) {
+    } catch (error) {
       console.error('Logout failed:', error);
     }
   };
