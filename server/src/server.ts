@@ -8,6 +8,8 @@ import session from "express-session";
 import passport from "passport";
 import './config/passport.js'
 
+import folderRoutes from './routes/folder.routes.js';
+
 const app = express();
 const PORT = Number(process.env.PORT) || 3000;
 
@@ -47,6 +49,8 @@ app.use(passport.session());
 
 // Auth routes
 app.use('/api/auth', authRoutes);
+// Folders
+app.use('/api/folders', folderRoutes); // ← Add this
 
 
 //test
