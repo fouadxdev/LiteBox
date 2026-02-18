@@ -4,12 +4,36 @@ import { Button } from "../components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { getFolders } from "@/lib/api";
 import type { Folder } from "@/types";
+import { createFolder as createFolderAPI } from "@/lib/api";
+import { CreateFolderDialog } from "@/components/CreateFolderDialog";
+import {
+  updateFolder as updateFolderAPI,
+  deleteFolder as deleteFolderAPI,
+} from "@/lib/api";
+import { FolderMenu } from "@/components/FolderMenu";
+import { RenameFolderDialog } from "@/components/RenameFolderDialog";
+import { DeleteFolderDialog } from "@/components/DeleteFolderDialog";
 
 export default function Dashboard() {
   const { user, isLoading: authLoading, logout } = useAuth();
   const navigate = useNavigate();
   const [folders, setFolders] = useState<Folder[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+
+  const [renameDialog, setRenameDialog] = useState<{
+    open: boolean;
+    folder: Folder | null;
+  }>({
+    open: false,
+    folder: null,
+  });
+  const [deleteDialog, setDeleteDialog] = useState<{
+    open: boolean;
+    folder: Folder | null;
+  }>({
+    open: false,
+    folder: null,
+  });
 
   useEffect(() => {
     const loadFolders = async () => {
@@ -55,6 +79,32 @@ export default function Dashboard() {
     );
   }
 
+  const handleCreateFolder = async (name: string) => {
+    const newFolder = await createFolderAPI(name);
+    // Add new folder to the list
+    setFolders((prev) => [newFolder, ...prev]);
+  };
+
+  const handleRenameFolder = async (newName: string) => {
+    if (!renameDialog.folder) return;
+
+    await updateFolderAPI(renameDialog.folder.id, newName);
+
+    setFolders((prev) =>
+      prev.map((f) =>
+        f.id === renameDialog.folder!.id ? { ...f, name: newName } : f,
+      ),
+    );
+  };
+
+  const handleDeleteFolder = async () => {
+    if (!deleteDialog.folder) return;
+
+    await deleteFolderAPI(deleteDialog.folder.id);
+
+    setFolders((prev) => prev.filter((f) => f.id !== deleteDialog.folder!.id));
+  };
+
   return (
     <>
       <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
@@ -90,7 +140,10 @@ export default function Dashboard() {
                     everything tidy
                   </p>
                 </div>
-                <Button size="lg">+ Create Folder</Button>
+                <CreateFolderDialog
+                  onCreateFolder={handleCreateFolder}
+                  trigger={<Button size="lg">+ Create Folder</Button>}
+                />
               </div>
             </div>
           ) : (
@@ -99,7 +152,7 @@ export default function Dashboard() {
                 <h2 className="text-lg font-medium text-gray-900 dark:text-white">
                   Your Folders
                 </h2>
-                <Button>+ New Folder</Button>
+                <CreateFolderDialog onCreateFolder={handleCreateFolder} />
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
@@ -110,9 +163,10 @@ export default function Dashboard() {
                   >
                     <div className="flex items-start justify-between mb-3">
                       <div className="text-4xl">📁</div>
-                      <button className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
-                        ⋮
-                      </button>
+                      <FolderMenu
+                        onRename={() => setRenameDialog({ open: true, folder })}
+                        onDelete={() => setDeleteDialog({ open: true, folder })}
+                      />
                     </div>
                     <h3 className="font-medium text-gray-900 dark:text-white mb-1 truncate">
                       {folder.name}
@@ -125,6 +179,23 @@ export default function Dashboard() {
               </div>
             </div>
           )}
+
+          {/* Rename Dialog */}
+          <RenameFolderDialog
+            open={renameDialog.open}
+            onOpenChange={(open) => setRenameDialog({ open, folder: null })}
+            currentName={renameDialog.folder?.name || ""}
+            onRename={handleRenameFolder}
+          />
+
+          {/* Delete Dialog */}
+          <DeleteFolderDialog
+            open={deleteDialog.open}
+            onOpenChange={(open) => setDeleteDialog({ open, folder: null })}
+            folderName={deleteDialog.folder?.name || ""}
+            fileCount={deleteDialog.folder?._count?.files || 0}
+            onDelete={handleDeleteFolder}
+          />
         </main>
       </div>
     </>
