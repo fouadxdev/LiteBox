@@ -9,7 +9,6 @@ export interface AuthResponse {
   message?: string;
 }
 
-
 export interface AuthCredentials {
   email: string;
   password?: string;
@@ -22,4 +21,27 @@ export interface AuthContextType {
   login: (user: User) => void;
   logout: () => void;
   checkAuth: () => Promise<void>;
+}
+
+export interface Folder {
+  id: string;
+  name: string;
+  userId: string;
+  createdAt: string;
+  _count?: {
+    files: number;
+  };
+}
+
+export interface File {
+  id: string;
+  name: string;
+  url: string;
+  size: number;
+  folderId: string;
+  uploadedAt: string;
+}
+
+export interface FolderWithFiles extends Folder {
+  files: File[];
 }

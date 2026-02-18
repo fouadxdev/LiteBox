@@ -1,14 +1,51 @@
+import { useState, useEffect } from "react";
 import { useAuth } from "../hooks/useAuth";
 import { Button } from "../components/ui/button";
 import { useNavigate } from "react-router-dom";
+import { getFolders } from "@/lib/api";
+import type { Folder } from "@/types";
 
 export default function Dashboard() {
-  const { user, isLoading, logout } = useAuth();
+  const { user, isLoading: authLoading, logout } = useAuth();
   const navigate = useNavigate();
+  const [folders, setFolders] = useState<Folder[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const loadFolders = async () => {
+      try {
+        const data = await getFolders();
+        setFolders(data);
+      } catch (error) {
+        console.error("Failed to load folders:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    if (user) {
+      loadFolders();
+    }
+  }, [user]);
+
+  const handleLogout = async () => {
+    await logout();
+    navigate("/login");
+  };
+
+  if (authLoading) {
+    return (
+      <div className="min-h-screen grid place-items-center">
+        <div className="text-gray-600">Loading...</div>
+      </div>
+    );
+  }
 
   if (isLoading) {
     return (
-      <div className="min-h-screen grid place-items-center">Loading...</div>
+      <div className="min-h-screen grid place-items-center">
+        Loading Folders...
+      </div>
     );
   }
 
@@ -18,18 +55,78 @@ export default function Dashboard() {
     );
   }
 
-  const handleLogout = async () => {
-    await logout();
-    navigate('/login');
-  };
+  return (
+    <>
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+        {/* header */}
+        <header className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
+            <h1 className="text-2xl font-semibold text-gray-800 dark:text-gray-400">
+              LiteBox
+            </h1>
+            <div className="flex items-center gap-4">
+              <span className="text-sm text-gray-600 dark:text-gray-400">
+                {user.email}
+              </span>
+              <Button variant={"outline"} size={"sm"} onClick={handleLogout}>
+                Logout
+              </Button>
+            </div>
+          </div>
+        </header>
 
-  return <>
-  <div className="min-h-screen p-8">
-      <div className="max-w-4xl mx-auto">
-        <h1 className="text-3xl font-bold mb-4">Dashboard</h1>
-        <p className="text-gray-600 mb-6">Welcome, {user.email}!</p>
-        <Button onClick={handleLogout}>Logout</Button>
+        {/* main */}
+        <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          {folders.length === 0 ? (
+            <div className="grid place-items-center min-h-[60vh]">
+              <div className="text-center space-y-6">
+                <div className="text-6xl">📁</div>
+                <div className="space-y-2">
+                  <h2 className="text-2xl font-semibold text-gray-900 dark:text-white">
+                    No folders yet...
+                  </h2>
+                  <p className="text-gray-600 dark:text-gray-400 max-w-md">
+                    Create your first folder to organize your files and keep
+                    everything tidy
+                  </p>
+                </div>
+                <Button size="lg">+ Create Folder</Button>
+              </div>
+            </div>
+          ) : (
+            <div>
+              <div className="flex justify-between items-center mb-6">
+                <h2 className="text-lg font-medium text-gray-900 dark:text-white">
+                  Your Folders
+                </h2>
+                <Button>+ New Folder</Button>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                {folders.map((folder) => (
+                  <div
+                    key={folder.id}
+                    className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4 hover:shadow-md transition-shadow cursor-pointer"
+                  >
+                    <div className="flex items-start justify-between mb-3">
+                      <div className="text-4xl">📁</div>
+                      <button className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
+                        ⋮
+                      </button>
+                    </div>
+                    <h3 className="font-medium text-gray-900 dark:text-white mb-1 truncate">
+                      {folder.name}
+                    </h3>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">
+                      {folder._count?.files || 0} files
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </main>
       </div>
-    </div>
-    </>;
+    </>
+  );
 }
