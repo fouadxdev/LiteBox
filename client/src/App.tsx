@@ -3,6 +3,7 @@ import { AuthProvider } from "./context/AuthProvider";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Dashboard from "./pages/Dashboard";
+import FolderView from './pages/FolderView';
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
             <Route path="/" element={<Dashboard />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
+            <Route path="/folder/:id" element={<FolderView />} />
           </Routes>
         </BrowserRouter>
       </AuthProvider>
