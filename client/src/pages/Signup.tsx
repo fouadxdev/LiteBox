@@ -54,7 +54,7 @@ export default function Signup() {
       const response = await signupUser(data)
       login(response.user)
 
-      navigate("/");
+      navigate("/dashboard");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Login Failed");
     } finally {

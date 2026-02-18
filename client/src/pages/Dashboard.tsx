@@ -75,7 +75,12 @@ export default function Dashboard() {
 
   if (!user) {
     return (
-      <div className="min-h-screen grid place-items-center">Not logged in</div>
+      <div className="min-h-screen grid place-items-center gap-4">
+        <p className="text-gray-600 dark:text-gray-400">Not logged in.</p>
+        <Button variant="outline" onClick={() => navigate("/login")}>
+          Sign in
+        </Button>
+      </div>
     );
   }
 

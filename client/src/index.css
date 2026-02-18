@@ -122,3 +122,36 @@
     @apply bg-background text-foreground;
     }
 }
+
+/* Landing page: distinctive typography and palette */
+.landing {
+  --landing-bg: #faf8f6;
+  --landing-bg-mesh: radial-gradient(ellipse 80% 60% at 50% -20%, oklch(0.85 0.02 85), transparent),
+    radial-gradient(ellipse 60% 40% at 100% 50%, oklch(0.92 0.015 200), transparent),
+    radial-gradient(ellipse 50% 30% at 0% 80%, oklch(0.93 0.01 260), transparent);
+  --landing-fg: #1c1917;
+  --landing-muted: #57534e;
+  --landing-accent: #0d9488;
+  --landing-accent-hover: #0f766e;
+  --landing-card: oklch(1 0 0 / 0.7);
+  --landing-font-heading: "Outfit", system-ui, sans-serif;
+  --landing-font-body: "DM Sans", system-ui, sans-serif;
+}
+
+.dark .landing {
+  --landing-bg: #0c0a09;
+  --landing-bg-mesh: radial-gradient(ellipse 80% 60% at 50% -20%, oklch(0.22 0.02 85), transparent),
+    radial-gradient(ellipse 60% 40% at 100% 50%, oklch(0.18 0.02 200), transparent);
+  --landing-fg: #fafaf9;
+  --landing-muted: #a8a29e;
+  --landing-accent: #2dd4bf;
+  --landing-accent-hover: #5eead4;
+  --landing-card: oklch(0.18 0.01 80 / 0.6);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .landing [data-animate] {
+    animation: none !important;
+    opacity: 1;
+  }
+}
