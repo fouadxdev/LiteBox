@@ -7,6 +7,7 @@ import 'dotenv/config'
 import session from "express-session";
 import passport from "passport";
 import './config/passport.js'
+import fileRoutes from './routes/file.routes.js';
 
 import folderRoutes from './routes/folder.routes.js';
 
@@ -51,7 +52,8 @@ app.use(passport.session());
 app.use('/api/auth', authRoutes);
 // Folders
 app.use('/api/folders', folderRoutes); // ← Add this
-
+//files
+app.use('/api/files', fileRoutes);
 
 //test
 app.get('/', (req, res) => {

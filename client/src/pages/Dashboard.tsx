@@ -14,11 +14,14 @@ import { FolderMenu } from "@/components/FolderMenu";
 import { RenameFolderDialog } from "@/components/RenameFolderDialog";
 import { DeleteFolderDialog } from "@/components/DeleteFolderDialog";
 
+
 export default function Dashboard() {
   const { user, isLoading: authLoading, logout } = useAuth();
   const navigate = useNavigate();
   const [folders, setFolders] = useState<Folder[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+
+  
 
   const [renameDialog, setRenameDialog] = useState<{
     open: boolean;
@@ -160,6 +163,7 @@ export default function Dashboard() {
                   <div
                     key={folder.id}
                     className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4 hover:shadow-md transition-shadow cursor-pointer"
+                    onClick={() => navigate(`/folder/${folder.id}`)}
                   >
                     <div className="flex items-start justify-between mb-3">
                       <div className="text-4xl">📁</div>
@@ -172,7 +176,7 @@ export default function Dashboard() {
                       {folder.name}
                     </h3>
                     <p className="text-sm text-gray-500 dark:text-gray-400">
-                      {folder._count?.files || 0} files
+                      {folder._count?.files || 0} {(folder._count?.files === 1 ? 'file' : 'files')}
                     </p>
                   </div>
                 ))}

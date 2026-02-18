@@ -16,7 +16,7 @@ export function FolderMenu({ onRename, onDelete }: FolderMenuProps) {
       <DropdownMenuTrigger asChild>
         <button 
           className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 p-1 rounded hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-          onClick={(e) => e.stopPropagation()} // Prevent folder card click
+          onClick={(e) => e.stopPropagation()} 
         >
           ⋮
         </button>
