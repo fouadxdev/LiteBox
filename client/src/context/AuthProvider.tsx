@@ -11,7 +11,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     try {
       const userData = await checkAuthAPI();
       setUser(userData); 
-    } catch (error) {
+    } catch{
       setUser(null);
     } finally {
       setIsLoading(false);
