@@ -22,7 +22,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     checkAuth();
   }, []);
 
-  // Update this to match your backend response structure
+
   const login = (userData: User) => {
     setUser(userData);
   };
