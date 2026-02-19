@@ -38,7 +38,8 @@ export interface File {
   name: string;
   url: string;
   size: number;
-  folderId: string;
+  folderId?: string | null;
+  publicId?: string | null;
   uploadedAt: string;
 }
 

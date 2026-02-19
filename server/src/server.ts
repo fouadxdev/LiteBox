@@ -1,19 +1,30 @@
 import express from "express";
 import cors from "cors";
-import authRoutes from './routes/auth.routes.js'
+import compression from "compression";
+import rateLimit from "express-rate-limit";
+import authRoutes from './routes/auth.routes.js';
 import { prisma } from "./config/database.js";
 import { PrismaSessionStore } from "@quixo3/prisma-session-store";
-import 'dotenv/config'
+import 'dotenv/config';
 import session from "express-session";
 import passport from "passport";
-import './config/passport.js'
+import './config/passport.js';
 import fileRoutes from './routes/file.routes.js';
-
 import folderRoutes from './routes/folder.routes.js';
+import shareRoutes from './routes/share.routes.js';
 
 const app = express();
 const PORT = Number(process.env.PORT) || 3000;
 
+app.use(compression());
+
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 20,
+  message: { error: "Too many attempts, please try again later." },
+});
+app.use("/api/auth/login", authLimiter);
+app.use("/api/auth/signup", authLimiter);
 
 app.use(
   cors({
@@ -51,9 +62,9 @@ app.use(passport.session());
 // Auth routes
 app.use('/api/auth', authRoutes);
 // Folders
-app.use('/api/folders', folderRoutes); // ← Add this
-//files
+app.use('/api/folders', folderRoutes);
 app.use('/api/files', fileRoutes);
+app.use('/api/share', shareRoutes);
 
 //test
 app.get('/', (req, res) => {

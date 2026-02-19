@@ -31,20 +31,22 @@ export const uploadFile = async (req: Request, res: Response) => {
       return res.status(404).json({ error: 'Folder not found' });
     }
 
-    // Upload to Cloudinary
+    // Upload to Cloudinary (folder path litebox/{folderId})
+    const folderPath = `litebox/${folderId}`;
     const { url, publicId } = await uploadToCloudinary(
       req.file.buffer,
-      req.file.originalname
+      req.file.originalname,
+      folderPath
     );
 
-    // Save to database - folderId is guaranteed to be string here
     const file = await prisma.file.create({
       data: {
         name: req.file.originalname,
         url,
         size: req.file.size,
+        publicId,
         folderId: folderId as string,
-        userId: userId 
+        userId,
       },
     });
 
@@ -99,9 +101,14 @@ export const deleteFile = async (req: Request, res: Response) => {
       return res.status(404).json({ error: 'File not found' });
     }
 
-   //Note: delete from cloudinary? later
+    if (file.publicId) {
+      try {
+        await deleteFromCloudinary(file.publicId);
+      } catch (err) {
+        console.error('Cloudinary delete error:', err);
+      }
+    }
 
-    // Delete from database
     await prisma.file.delete({
       where: { id: id as string },
     });

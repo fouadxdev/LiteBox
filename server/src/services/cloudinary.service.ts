@@ -22,17 +22,19 @@ cloudinary.config({
 });
 
 
-// Upload file buffer to Cloudinary
+// Upload file buffer to Cloudinary (folder path e.g. litebox/{folderId})
 export const uploadToCloudinary = (
   fileBuffer: Buffer,
-  filename: string
-): Promise<{ url: string; publicId: string }> => {
+  filename: string,
+  folderPath: string = 'litebox'
+): Promise<{ url: string; publicId: string; bytes?: number }> => {
   return new Promise((resolve, reject) => {
+    const publicId = `${Date.now()}-${filename.replace(/[^a-zA-Z0-9.-]/g, '_')}`;
     const uploadStream = cloudinary.uploader.upload_stream(
       {
-        folder: 'file-uploader', // Organize files in a folder
-        resource_type: 'auto', // Auto-detect file type
-        public_id: `${Date.now()}-${filename}`, // Unique filename
+        folder: folderPath,
+        resource_type: 'auto',
+        public_id: publicId,
       },
       (error, result) => {
         if (error || !result) {
@@ -41,6 +43,7 @@ export const uploadToCloudinary = (
         resolve({
           url: result.secure_url,
           publicId: result.public_id,
+          bytes: result.bytes,
         });
       }
     );

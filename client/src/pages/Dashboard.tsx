@@ -13,6 +13,8 @@ import {
 import { FolderMenu } from "@/components/FolderMenu";
 import { RenameFolderDialog } from "@/components/RenameFolderDialog";
 import { DeleteFolderDialog } from "@/components/DeleteFolderDialog";
+import { Skeleton } from "@/components/ui/skeleton";
+import { FolderOpen } from "lucide-react";
 
 
 export default function Dashboard() {
@@ -41,8 +43,8 @@ export default function Dashboard() {
   useEffect(() => {
     const loadFolders = async () => {
       try {
-        const data = await getFolders();
-        setFolders(data);
+        const res = await getFolders();
+        setFolders(res.data);
       } catch (error) {
         console.error("Failed to load folders:", error);
       } finally {
@@ -62,16 +64,38 @@ export default function Dashboard() {
 
   if (authLoading) {
     return (
-      <div className="min-h-screen grid place-items-center">
-        <div className="text-gray-600">Loading...</div>
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+        <header className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+            <Skeleton className="h-8 w-32" />
+          </div>
+        </header>
+        <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+            {[1, 2, 3, 4, 5, 6].map((i) => (
+              <Skeleton key={i} className="h-32 rounded-lg" />
+            ))}
+          </div>
+        </main>
       </div>
     );
   }
 
   if (isLoading) {
     return (
-      <div className="min-h-screen grid place-items-center">
-        Loading Folders...
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+        <header className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+            <Skeleton className="h-8 w-32" />
+          </div>
+        </header>
+        <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+            {[1, 2, 3, 4, 5, 6].map((i) => (
+              <Skeleton key={i} className="h-32 rounded-lg" />
+            ))}
+          </div>
+        </main>
       </div>
     );
   }
@@ -138,14 +162,17 @@ export default function Dashboard() {
           {folders.length === 0 ? (
             <div className="grid place-items-center min-h-[60vh]">
               <div className="text-center space-y-6">
-                <div className="text-6xl">📁</div>
+                <div className="flex justify-center">
+                  <div className="rounded-2xl bg-gray-100 dark:bg-gray-800 p-6">
+                    <FolderOpen className="h-16 w-16 text-gray-400 dark:text-gray-500" aria-hidden />
+                  </div>
+                </div>
                 <div className="space-y-2">
                   <h2 className="text-2xl font-semibold text-gray-900 dark:text-white">
-                    No folders yet...
+                    No folders yet
                   </h2>
                   <p className="text-gray-600 dark:text-gray-400 max-w-md">
-                    Create your first folder to organize your files and keep
-                    everything tidy
+                    Create your first folder to organize your files and keep everything tidy.
                   </p>
                 </div>
                 <CreateFolderDialog
@@ -167,11 +194,11 @@ export default function Dashboard() {
                 {folders.map((folder) => (
                   <div
                     key={folder.id}
-                    className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4 hover:shadow-md transition-shadow cursor-pointer"
+                    className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4 hover:shadow-md transition-shadow duration-200 cursor-pointer"
                     onClick={() => navigate(`/folder/${folder.id}`)}
                   >
                     <div className="flex items-start justify-between mb-3">
-                      <div className="text-4xl">📁</div>
+                      <FolderOpen className="h-10 w-10 text-gray-500 dark:text-gray-400 shrink-0" aria-hidden />
                       <FolderMenu
                         onRename={() => setRenameDialog({ open: true, folder })}
                         onDelete={() => setDeleteDialog({ open: true, folder })}

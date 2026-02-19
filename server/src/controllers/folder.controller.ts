@@ -31,21 +31,32 @@ export const createFolder = async (req: Request, res: Response) => {
   }
 };
 
-// all
+// all (with optional pagination: ?page=1&limit=50)
 export const getFolders = async (req: Request, res: Response) => {
   try {
     const userId = getUserId(req);
+    const page = Math.max(1, parseInt(String(req.query.page), 10) || 1);
+    const limit = Math.min(100, Math.max(1, parseInt(String(req.query.limit), 10) || 50));
+    const skip = (page - 1) * limit;
 
-    const folders = await prisma.folder.findMany({
-      where: { userId },
-      include: {
-        _count: {
-          select: { files: true },
+    const [folders, total] = await Promise.all([
+      prisma.folder.findMany({
+        where: { userId },
+        include: {
+          _count: { select: { files: true } },
         },
-      },
-      orderBy: { createdAt: "desc" },
-    });
-    res.json(folders);
+        orderBy: { createdAt: "desc" },
+        skip,
+        take: limit,
+      }),
+      prisma.folder.count({ where: { userId } }),
+    ]);
+
+    const totalPages = Math.ceil(total / limit);
+    if (totalPages > 0 && page > totalPages) {
+      return res.json({ data: [], total, page: totalPages, totalPages });
+    }
+    res.json({ data: folders, total, page, totalPages });
   } catch (error) {
     console.error("Get folders error:", error);
     res.status(500).json({ error: "Failed to get all Folders" });

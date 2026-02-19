@@ -20,12 +20,27 @@ model User {
 }
 
 model Folder {
+  id           String        @id @default(uuid())
+  name         String
+  userId       String
+  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  files        File[]
+  folderShares FolderShare[]
+  createdAt    DateTime      @default(now())
+
+  @@index([userId])
+}
+
+model FolderShare {
   id        String   @id @default(uuid())
-  name      String
-  userId    String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  files     File[]
+  folderId  String
+  folder    Folder   @relation(fields: [folderId], references: [id], onDelete: Cascade)
+  token     String   @unique
+  expiresAt DateTime
   createdAt DateTime @default(now())
+
+  @@index([token])
+  @@index([expiresAt])
 }
 
 model File {
@@ -33,11 +48,15 @@ model File {
   name       String
   url        String
   size       Int
-  folderId   String? 
+  publicId   String?
+  folderId   String?
   folder     Folder?  @relation(fields: [folderId], references: [id], onDelete: Cascade)
-  userId     String   
+  userId     String
   user       User     @relation(fields: [userId], references: [id])
   uploadedAt DateTime @default(now())
+
+  @@index([folderId])
+  @@index([userId])
 }
 
 model Session {
