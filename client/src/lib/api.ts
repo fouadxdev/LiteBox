@@ -76,4 +76,27 @@ export const deleteFolder = async (
   return response.data;
 };
 
+// File API calls
+export const uploadFile = async (folderId: string, file: File): Promise<File> => {
+  const formData = new FormData();
+  formData.append('file', file);
+  
+  const response = await api.post(`/files/upload/${folderId}`, formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
+  return response.data;
+};
+
+export const getFile = async (id: string): Promise<File> => {
+  const response = await api.get(`/files/${id}`);
+  return response.data;
+};
+
+export const deleteFile = async (id: string): Promise<{ message: string }> => {
+  const response = await api.delete(`/files/${id}`);
+  return response.data;
+};
+
 export default api;
