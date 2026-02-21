@@ -15,6 +15,7 @@ import { RenameFolderDialog } from "@/components/RenameFolderDialog";
 import { DeleteFolderDialog } from "@/components/DeleteFolderDialog";
 import { Skeleton } from "@/components/ui/skeleton";
 import { FolderOpen } from "lucide-react";
+import { Link } from "react-router-dom";
 
 
 export default function Dashboard() {
@@ -129,7 +130,8 @@ export default function Dashboard() {
     );
   };
 
-  const handleDeleteFolder = async () => {
+  const handleDeleteFolder = async (e) => {
+    e.stopPropagation()
     if (!deleteDialog.folder) return;
 
     await deleteFolderAPI(deleteDialog.folder.id);
@@ -144,7 +146,7 @@ export default function Dashboard() {
         <header className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
             <h1 className="text-2xl font-semibold text-gray-800 dark:text-gray-400">
-              LiteBox
+              <Link to={'/'}>Litebox</Link>
             </h1>
             <div className="flex items-center gap-4">
               <span className="text-sm text-gray-600 dark:text-gray-400">
