@@ -33,7 +33,7 @@ export function DeleteFolderDialog({
       onOpenChange(false);
     } catch (error) {
       console.error('Delete failed:', error);
-      // Error handling could be improved here
+      
     } finally {
       setIsLoading(false);
     }

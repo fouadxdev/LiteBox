@@ -42,7 +42,7 @@ export function DeleteFileDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-md">
         <DialogHeader className="text-center">
-          <DialogTitle>Delete File?</DialogTitle>
+          <DialogTitle>Delete {fileName}</DialogTitle>
           <DialogDescription>
             Are you sure you want to delete "{fileName}"?
             <span className="block mt-2 text-gray-500 dark:text-gray-400">

@@ -17,14 +17,11 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { FolderOpen } from "lucide-react";
 import { Link } from "react-router-dom";
 
-
 export default function Dashboard() {
   const { user, isLoading: authLoading, logout } = useAuth();
   const navigate = useNavigate();
   const [folders, setFolders] = useState<Folder[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-
-  
 
   const [renameDialog, setRenameDialog] = useState<{
     open: boolean;
@@ -130,8 +127,8 @@ export default function Dashboard() {
     );
   };
 
-  const handleDeleteFolder = async (e) => {
-    e.stopPropagation()
+  const handleDeleteFolder = async () => {
+    
     if (!deleteDialog.folder) return;
 
     await deleteFolderAPI(deleteDialog.folder.id);
@@ -146,7 +143,7 @@ export default function Dashboard() {
         <header className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
             <h1 className="text-2xl font-semibold text-gray-800 dark:text-gray-400">
-              <Link to={'/'}>Litebox</Link>
+              <Link to={"/"}>Litebox</Link>
             </h1>
             <div className="flex items-center gap-4">
               <span className="text-sm text-gray-600 dark:text-gray-400">
@@ -166,7 +163,10 @@ export default function Dashboard() {
               <div className="text-center space-y-6">
                 <div className="flex justify-center">
                   <div className="rounded-2xl bg-gray-100 dark:bg-gray-800 p-6">
-                    <FolderOpen className="h-16 w-16 text-gray-400 dark:text-gray-500" aria-hidden />
+                    <FolderOpen
+                      className="h-16 w-16 text-gray-400 dark:text-gray-500"
+                      aria-hidden
+                    />
                   </div>
                 </div>
                 <div className="space-y-2">
@@ -174,7 +174,8 @@ export default function Dashboard() {
                     No folders yet
                   </h2>
                   <p className="text-gray-600 dark:text-gray-400 max-w-md">
-                    Create your first folder to organize your files and keep everything tidy.
+                    Create your first folder to organize your files and keep
+                    everything tidy.
                   </p>
                 </div>
                 <CreateFolderDialog
@@ -200,7 +201,10 @@ export default function Dashboard() {
                     onClick={() => navigate(`/folder/${folder.id}`)}
                   >
                     <div className="flex items-start justify-between mb-3">
-                      <FolderOpen className="h-10 w-10 text-gray-500 dark:text-gray-400 shrink-0" aria-hidden />
+                      <FolderOpen
+                        className="h-10 w-10 text-gray-500 dark:text-gray-400 shrink-0"
+                        aria-hidden
+                      />
                       <FolderMenu
                         onRename={() => setRenameDialog({ open: true, folder })}
                         onDelete={() => setDeleteDialog({ open: true, folder })}
@@ -210,7 +214,8 @@ export default function Dashboard() {
                       {folder.name}
                     </h3>
                     <p className="text-sm text-gray-500 dark:text-gray-400">
-                      {folder._count?.files || 0} {(folder._count?.files === 1 ? 'file' : 'files')}
+                      {folder._count?.files || 0}{" "}
+                      {folder._count?.files === 1 ? "file" : "files"}
                     </p>
                   </div>
                 ))}
