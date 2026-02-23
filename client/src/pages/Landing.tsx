@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { FolderOpen, Upload, Share2, Shield } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { ThemeToggle } from "@/components/ThemeToggle";
 import { cn } from "@/lib/utils";
 
 const features = [
@@ -56,10 +57,14 @@ export default function Landing() {
             style={{ fontFamily: "var(--landing-font-heading)" }}
             aria-label="LiteBox home"
           >
-            <FolderOpen className="w-6 h-6 text-teal-600 dark:text-teal-400" aria-hidden />
+            <FolderOpen
+              className="w-6 h-6 text-teal-600 dark:text-teal-400"
+              aria-hidden
+            />
             <span>LiteBox</span>
           </Link>
           <nav className="flex items-center gap-3">
+            <ThemeToggle />
             <Link
               to="/login"
               className="text-sm font-medium text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-100 cursor-pointer transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-500 focus-visible:ring-offset-2 rounded-md py-2 px-3"
@@ -104,7 +109,11 @@ export default function Landing() {
             className="flex flex-col sm:flex-row items-center justify-center gap-4"
             data-animate
           >
-            <Link to="/signup" className="cursor-pointer w-full sm:w-auto" aria-label="Create account">
+            <Link
+              to="/signup"
+              className="cursor-pointer w-full sm:w-auto"
+              aria-label="Create account"
+            >
               <Button
                 size="lg"
                 className="w-full sm:w-auto rounded-xl bg-teal-600 hover:bg-teal-700 dark:bg-teal-500 dark:hover:bg-teal-400 text-white text-base font-medium h-12 px-8 transition-all duration-200 focus-visible:ring-teal-500 shadow-lg shadow-teal-500/25 hover:shadow-teal-500/30"
@@ -132,7 +141,7 @@ export default function Landing() {
               key={i}
               className={cn(
                 "rounded-xl border transition-transform duration-300 hover:scale-105 cursor-default",
-                "bg-white/90 dark:bg-stone-800/90 border-stone-200 dark:border-stone-600 shadow-lg"
+                "bg-white/90 dark:bg-stone-800/90 border-stone-200 dark:border-stone-600 shadow-lg",
               )}
               style={{
                 width: 72 + i * 24,
@@ -168,7 +177,7 @@ export default function Landing() {
                 className={cn(
                   "rounded-2xl border border-stone-200/80 dark:border-stone-700/50 p-6 sm:p-8",
                   "bg-white/70 dark:bg-stone-800/50 backdrop-blur-sm",
-                  "transition-all duration-200 hover:shadow-xl hover:shadow-stone-200/20 dark:hover:shadow-stone-900/40 hover:border-teal-200 dark:hover:border-teal-800/50 cursor-default"
+                  "transition-all duration-200 hover:shadow-xl hover:shadow-stone-200/20 dark:hover:shadow-stone-900/40 hover:border-teal-200 dark:hover:border-teal-800/50 cursor-default",
                 )}
                 style={{
                   animation: "landingFadeUp 0.6s ease-out both",
@@ -212,7 +221,11 @@ export default function Landing() {
           <p className="text-stone-600 dark:text-stone-400 mb-6">
             Create an account and upload your first file in under a minute.
           </p>
-          <Link to="/signup" className="cursor-pointer inline-block" aria-label="Sign up for LiteBox">
+          <Link
+            to="/signup"
+            className="cursor-pointer inline-block"
+            aria-label="Sign up for LiteBox"
+          >
             <Button
               size="lg"
               className="rounded-xl bg-teal-600 hover:bg-teal-700 dark:bg-teal-500 dark:hover:bg-teal-400 text-white font-medium h-12 px-8 transition-colors duration-200 focus-visible:ring-teal-500"

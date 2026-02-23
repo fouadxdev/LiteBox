@@ -14,6 +14,7 @@ import { FolderMenu } from "@/components/FolderMenu";
 import { RenameFolderDialog } from "@/components/RenameFolderDialog";
 import { DeleteFolderDialog } from "@/components/DeleteFolderDialog";
 import { Skeleton } from "@/components/ui/skeleton";
+import { ThemeToggle } from "@/components/ThemeToggle";
 import { FolderOpen } from "lucide-react";
 import { Link } from "react-router-dom";
 
@@ -111,7 +112,6 @@ export default function Dashboard() {
 
   const handleCreateFolder = async (name: string) => {
     const newFolder = await createFolderAPI(name);
-    // Add new folder to the list
     setFolders((prev) => [newFolder, ...prev]);
   };
 
@@ -128,7 +128,6 @@ export default function Dashboard() {
   };
 
   const handleDeleteFolder = async () => {
-    
     if (!deleteDialog.folder) return;
 
     await deleteFolderAPI(deleteDialog.folder.id);
@@ -146,6 +145,7 @@ export default function Dashboard() {
               <Link to={"/"}>Litebox</Link>
             </h1>
             <div className="flex items-center gap-4">
+              <ThemeToggle />
               <span className="text-sm text-gray-600 dark:text-gray-400">
                 {user.email}
               </span>

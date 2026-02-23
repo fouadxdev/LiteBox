@@ -2,6 +2,7 @@ import { lazy, Suspense } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { Toaster } from "sonner";
 import { AuthProvider } from "./context/AuthProvider";
+import { ThemeProvider } from "./context/ThemeProvider";
 import { useAuth } from "./hooks/useAuth";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
@@ -33,7 +34,7 @@ function HomeRoute() {
 
 function App() {
   return (
-    <>
+    <ThemeProvider>
       <Toaster position="top-right" richColors closeButton />
       <AuthProvider>
         <BrowserRouter>
@@ -61,7 +62,7 @@ function App() {
           </Routes>
         </BrowserRouter>
       </AuthProvider>
-    </>
+    </ThemeProvider>
   );
 }
 

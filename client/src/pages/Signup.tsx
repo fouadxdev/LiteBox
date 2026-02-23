@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { Link } from "react-router-dom";
-import { useAuth } from '../hooks/useAuth';
+import { useAuth } from "../hooks/useAuth";
 import {
   Card,
   CardContent,
@@ -23,6 +23,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 const formSchema = z.object({
   email: z.email("Invalid email address"),
@@ -51,12 +52,12 @@ export default function Signup() {
       setError("");
       setIsLoading(true);
 
-      const response = await signupUser(data)
-      login(response.user)
+      const response = await signupUser(data);
+      login(response.user);
 
       navigate("/dashboard");
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Login Failed");
+      setError(err instanceof Error ? err.message : "Signup Failed");
     } finally {
       setIsLoading(false);
     }
@@ -64,7 +65,10 @@ export default function Signup() {
 
   return (
     <>
-      <div className="min-h-screen bg-gray-100 p-4 flex items-center ">
+      <div className="min-h-screen bg-gray-100 dark:bg-gray-900 p-4 flex items-center relative">
+        <div className="absolute top-4 right-4">
+          <ThemeToggle />
+        </div>
         <Card className="w-full max-w-md mx-auto">
           <CardHeader>
             <CardTitle className="mx-auto text-2xl">Sign up</CardTitle>
@@ -112,12 +116,12 @@ export default function Signup() {
               </form>
             </Form>
             {error && (
-              <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded text-red-700 text-sm">
+              <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded text-red-700 text-sm dark:bg-red-900/20 dark:border-red-800 dark:text-red-400">
                 {error}
               </div>
             )}
           </CardContent>
-          <p className="mt-2 text-center text-sm text-gray-600">
+          <p className="mt-2 text-center text-sm text-gray-600 dark:text-gray-400">
             Already have an account?{" "}
             <Link to="/login" className="text-blue-600 hover:underline">
               Login
