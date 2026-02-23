@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { useAuth } from "@/hooks/useAuth";
+import { Link } from "react-router-dom";
 import {
   Card,
   CardContent,
@@ -118,6 +119,12 @@ export default function Login() {
             </div>
           )}
           </CardContent>
+          <p className="mt-2 text-center text-sm text-gray-600">
+            Don't have an account?{" "}
+            <Link to="/signup" className="text-blue-600 hover:underline">
+             Sign up 
+            </Link>
+          </p>
         </Card>
       </div>
     </>

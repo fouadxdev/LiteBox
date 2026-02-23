@@ -19,7 +19,7 @@ passport.use(
           return done(null, false, { message: "Invalid email or password" });
         }
 
-        const isMatch = bcrypt.compare(password, user.password);
+        const isMatch = await bcrypt.compare(password, user.password);
 
         if (!isMatch) {
           return done(null, false, { message: "Invalid email or password" });
@@ -46,4 +46,4 @@ passport.deserializeUser(async (id: string, done) => {
   }
 });
 
-export default passport
+export default passport;
